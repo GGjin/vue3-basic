@@ -13,6 +13,7 @@
       </li>
     </ul>
     <h1>{{ person.name }}</h1>
+    <h1>X:{{ x }},Y:{{ y }}</h1>
     <button @click="increase">👍+1</button>
     <button @click="updateGreeting">添加title</button>
   </div>
@@ -27,7 +28,9 @@ import {
   onUpdated,
   watch,
   ref,
+  onUnmounted,
 } from "vue";
+import useMounsePosition from "./hooks/userMousePosition";
 interface DataProps {
   count: number;
   double: number;
@@ -76,7 +79,8 @@ export default {
     });
 
     const toRefData = toRefs(data);
-    return { ...toRefData, greetings, updateGreeting };
+    const { x, y } = useMounsePosition();
+    return { ...toRefData, greetings, updateGreeting, x, y };
   },
 };
 </script>
