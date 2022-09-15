@@ -15,10 +15,15 @@
     <h1>{{ person.name }}</h1>
     <h1>X:{{ x }},Y:{{ y }}</h1>
     <h1 v-if="loading">Loading!...</h1>
-    <img v-if="loaded" :src="result.message" />
+    <button @click="openModal">open modal</button>
+    <dialog-model :isOpen="modalIsOpen" @close-modal="closeDialogModal"
+      >my modal!!!!</dialog-model
+    >
+    <img v-if="loaded" :src="result.message" width="100px" height="100px" />
     <button @click="increase">👍+1</button>
     <button @click="updateGreeting">添加title</button>
   </div>
+  <div id="model"></div>
 </template>
 
 <script lang="ts">
@@ -30,10 +35,10 @@ import {
   onUpdated,
   watch,
   ref,
-  onUnmounted,
 } from "vue";
 import useMounsePosition from "./hooks/userMousePosition";
 import useURLLoader from "./hooks/useURLLoader";
+import DialogModel from "./components/DialogModel.vue";
 interface DataProps {
   count: number;
   double: number;
@@ -42,6 +47,7 @@ interface DataProps {
   person: { name?: string };
 }
 export default {
+  components: { DialogModel },
   name: "App",
   setup() {
     // const count = ref(0);
@@ -86,6 +92,15 @@ export default {
     const { result, loading, error, loaded } = useURLLoader(
       "https://dog.ceo/api/breeds/image/random"
     );
+
+    const modalIsOpen = ref(false);
+    const openModal = () => {
+      modalIsOpen.value = true;
+    };
+    const closeDialogModal = () => {
+      modalIsOpen.value = false;
+    };
+
     return {
       ...toRefData,
       greetings,
@@ -96,6 +111,9 @@ export default {
       loading,
       error,
       loaded,
+      modalIsOpen,
+      openModal,
+      closeDialogModal,
     };
   },
 };
