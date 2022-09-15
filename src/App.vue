@@ -14,11 +14,20 @@
     </ul>
     <h1>{{ person.name }}</h1>
     <button @click="increase">👍+1</button>
+    <button @click="updateGreeting">添加title</button>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, reactive, toRefs, onMounted, onUpdated } from "vue";
+import {
+  computed,
+  reactive,
+  toRefs,
+  onMounted,
+  onUpdated,
+  watch,
+  ref,
+} from "vue";
 interface DataProps {
   count: number;
   double: number;
@@ -54,8 +63,20 @@ export default {
     });
     data.numbers[0] = 5;
     data.person.name = "gg";
+
+    const greetings = ref("");
+    const updateGreeting = () => {
+      greetings.value += "hello!";
+    };
+    watch([greetings, data], (newValue, oldValue) => {
+      console.log(newValue);
+      console.log(oldValue);
+
+      document.title = "updated" + greetings.value + data.count;
+    });
+
     const toRefData = toRefs(data);
-    return { ...toRefData };
+    return { ...toRefData, greetings, updateGreeting };
   },
 };
 </script>
