@@ -14,6 +14,8 @@
     </ul>
     <h1>{{ person.name }}</h1>
     <h1>X:{{ x }},Y:{{ y }}</h1>
+    <h1 v-if="loading">Loading!...</h1>
+    <img v-if="loaded" :src="result.message" />
     <button @click="increase">👍+1</button>
     <button @click="updateGreeting">添加title</button>
   </div>
@@ -31,6 +33,7 @@ import {
   onUnmounted,
 } from "vue";
 import useMounsePosition from "./hooks/userMousePosition";
+import useURLLoader from "./hooks/useURLLoader";
 interface DataProps {
   count: number;
   double: number;
@@ -80,7 +83,20 @@ export default {
 
     const toRefData = toRefs(data);
     const { x, y } = useMounsePosition();
-    return { ...toRefData, greetings, updateGreeting, x, y };
+    const { result, loading, error, loaded } = useURLLoader(
+      "https://dog.ceo/api/breeds/image/random"
+    );
+    return {
+      ...toRefData,
+      greetings,
+      updateGreeting,
+      x,
+      y,
+      result,
+      loading,
+      error,
+      loaded,
+    };
   },
 };
 </script>
